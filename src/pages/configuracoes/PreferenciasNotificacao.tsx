@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { PushNotifications } from '@/components/notifications/PushNotifications';
+import { OfflineIndicator } from '@/hooks/useServiceWorker';
 export default function PreferenciasNotificacao() {
   const [emailNotifications, setEmailNotifications] = useState({
     newMessages: true,
@@ -61,15 +63,20 @@ export default function PreferenciasNotificacao() {
     console.log('Salvando preferências de notificação...');
   };
   return <div className="p-6 space-y-6 max-w-4xl mx-auto">
+      <OfflineIndicator />
+      
       <div className="flex items-center justify-between">
         <div>
-          
-          
+          <h1 className="text-2xl font-bold">Preferências de Notificação</h1>
+          <p className="text-muted-foreground">Configure como e quando receber notificações</p>
         </div>
         <Button onClick={handleSave} className="bg-amplie-primary hover:bg-amplie-primary-light">
           Salvar Preferências
         </Button>
       </div>
+
+      {/* Notificações Push Avançadas */}
+      <PushNotifications />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Notificações por Email */}

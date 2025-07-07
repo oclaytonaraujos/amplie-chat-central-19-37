@@ -43,6 +43,7 @@ const MeuPerfil = lazy(() => import("@/pages/MeuPerfil"));
 const PlanoFaturamento = lazy(() => import("@/pages/PlanoFaturamento"));
 const FlowBuilder = lazy(() => import("@/pages/FlowBuilder"));
 const Painel = lazy(() => import("@/pages/Painel"));
+const MelhoriasDashboard = lazy(() => import("@/pages/MelhoriasDashboard"));
 const ConfiguracoesGerais = lazy(() => import("@/pages/configuracoes/ConfiguracoesGerais"));
 const ConfiguracoesAvancadas = lazy(() => import("@/pages/configuracoes/ConfiguracoesAvancadas"));
 const PreferenciasNotificacao = lazy(() => import("@/pages/configuracoes/PreferenciasNotificacao"));
@@ -169,7 +170,9 @@ function AppRoutes() {
       <Route path="/usuarios" element={
         <ProtectedRoute>
           <Layout title="Usuários" description="Gerenciamento de usuários">
-            <Usuarios />
+            <Suspense fallback={<PageFallback />}>
+              <Usuarios />
+            </Suspense>
           </Layout>
         </ProtectedRoute>
       } />
@@ -177,7 +180,9 @@ function AppRoutes() {
       <Route path="/setores" element={
         <ProtectedRoute>
           <Layout title="Setores" description="Organização por setores">
-            <Setores />
+            <Suspense fallback={<PageFallback />}>
+              <Setores />
+            </Suspense>
           </Layout>
         </ProtectedRoute>
       } />
@@ -185,7 +190,9 @@ function AppRoutes() {
       <Route path="/gerenciar-equipe" element={
         <ProtectedRoute>
           <Layout title="Gerenciar Equipe" description="Administração da equipe">
-            <GerenciarEquipe />
+            <Suspense fallback={<PageFallback />}>
+              <GerenciarEquipe />
+            </Suspense>
           </Layout>
         </ProtectedRoute>
       } />
@@ -193,7 +200,9 @@ function AppRoutes() {
       <Route path="/meu-perfil" element={
         <ProtectedRoute>
           <Layout title="Meu Perfil" description="Configurações pessoais">
-            <MeuPerfil />
+            <Suspense fallback={<PageFallback />}>
+              <MeuPerfil />
+            </Suspense>
           </Layout>
         </ProtectedRoute>
       } />
@@ -201,7 +210,9 @@ function AppRoutes() {
       <Route path="/plano-faturamento" element={
         <ProtectedRoute>
           <Layout title="Plano e Faturamento" description="Gerenciamento financeiro">
-            <PlanoFaturamento />
+            <Suspense fallback={<PageFallback />}>
+              <PlanoFaturamento />
+            </Suspense>
           </Layout>
         </ProtectedRoute>
       } />
@@ -210,7 +221,9 @@ function AppRoutes() {
       <Route path="/configuracoes/gerais" element={
         <ProtectedRoute>
           <Layout title="Configurações Gerais" description="Configurações do sistema">
-            <ConfiguracoesGerais />
+            <Suspense fallback={<PageFallback />}>
+              <ConfiguracoesGerais />
+            </Suspense>
           </Layout>
         </ProtectedRoute>
       } />
@@ -218,7 +231,9 @@ function AppRoutes() {
       <Route path="/configuracoes/avancadas" element={
         <ProtectedRoute>
           <Layout title="Configurações Avançadas" description="Configurações técnicas">
-            <ConfiguracoesAvancadas />
+            <Suspense fallback={<PageFallback />}>
+              <ConfiguracoesAvancadas />
+            </Suspense>
           </Layout>
         </ProtectedRoute>
       } />
@@ -226,7 +241,9 @@ function AppRoutes() {
       <Route path="/configuracoes/notificacoes" element={
         <ProtectedRoute>
           <Layout title="Notificações" description="Preferências de notificação">
-            <PreferenciasNotificacao />
+            <Suspense fallback={<PageFallback />}>
+              <PreferenciasNotificacao />
+            </Suspense>
           </Layout>
         </ProtectedRoute>
       } />
@@ -234,7 +251,9 @@ function AppRoutes() {
       <Route path="/configuracoes/aparencia" element={
         <ProtectedRoute>
           <Layout title="Aparência" description="Personalização visual">
-            <Aparencia />
+            <Suspense fallback={<PageFallback />}>
+              <Aparencia />
+            </Suspense>
           </Layout>
         </ProtectedRoute>
       } />
@@ -242,7 +261,9 @@ function AppRoutes() {
       <Route path="/configuracoes/idioma" element={
         <ProtectedRoute>
           <Layout title="Idioma" description="Configurações de idioma">
-            <Idioma />
+            <Suspense fallback={<PageFallback />}>
+              <Idioma />
+            </Suspense>
           </Layout>
         </ProtectedRoute>
       } />

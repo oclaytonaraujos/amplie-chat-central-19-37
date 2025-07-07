@@ -1,7 +1,7 @@
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { VirtualScroll } from '@/components/ui/virtual-scroll';
 import { Button } from '@/components/ui/button';
 import { MessageSquare, Clock, User, Tag } from 'lucide-react';
 import { useAtendimentoReal } from '@/hooks/useAtendimentoReal';
@@ -126,89 +126,112 @@ export function AtendimentosListReal({
     );
   }
 
-  return (
-    <ScrollArea className="h-full">
-      <div className="space-y-2 p-2">
-        {conversas.map((conversa) => (
-          <div
-            key={conversa.id}
-            className={`p-4 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
-              selectedAtendimento?.id === conversa.id
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 bg-white hover:border-gray-300'
-            }`}
-            onClick={() => onSelectAtendimento(conversa)}
-          >
-            {/* Header com nome do cliente e status */}
-            <div className="flex items-start justify-between mb-2">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center space-x-2 mb-1">
-                  <User className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                  <h3 className="font-medium text-gray-900 truncate">
-                    {conversa.contatos?.nome || 'Cliente Desconhecido'}
-                  </h3>
-                </div>
-                
-                {conversa.contatos?.telefone && (
-                  <p className="text-sm text-gray-500 truncate">
-                    {conversa.contatos.telefone}
-                  </p>
-                )}
-              </div>
-              
-              <div className="flex flex-col items-end space-y-1">
-                <Badge className={getStatusColor(conversa.status)}>
-                  {getStatusText(conversa.status)}
-                </Badge>
-                <div className="flex items-center text-xs text-gray-500">
-                  <Clock className="w-3 h-3 mr-1" />
-                  {formatarTempo(conversa.updated_at)}
-                </div>
-              </div>
-            </div>
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerHeight, setContainerHeight] = useState(400);
 
-            {/* Informações adicionais */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                {conversa.canal && (
-                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                    {conversa.canal.toUpperCase()}
-                  </span>
-                )}
-                
-                {conversa.prioridade && (
-                  <Badge variant="outline" className={getPriorityColor(conversa.prioridade)}>
-                    {conversa.prioridade.charAt(0).toUpperCase() + conversa.prioridade.slice(1)}
-                  </Badge>
-                )}
-              </div>
+  useEffect(() => {
+    const updateHeight = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        setContainerHeight(rect.height);
+      }
+    };
 
-              {conversa.profiles && (
-                <div className="text-xs text-gray-500">
-                  Agente: {conversa.profiles.nome}
-                </div>
-              )}
-            </div>
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
 
-            {/* Tags */}
-            {conversa.tags && conversa.tags.length > 0 && (
-              <div className="flex items-center mt-2 space-x-1">
-                <Tag className="w-3 h-3 text-gray-400" />
-                <div className="flex flex-wrap gap-1">
-                  {conversa.tags.slice(0, 3).map((tag, index) => (
-                    <span key={index} className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
-                      {tag}
-                    </span>
-                  ))}
-                  {conversa.tags.length > 3 && (
-                    <span className="text-xs text-gray-500">+{conversa.tags.length - 3}</span>
-                  )}
-                </div>
-              </div>
+  const renderConversaItem = (conversa: Conversa, index: number) => (
+    <div
+      key={conversa.id}
+      className={`p-4 rounded-lg border cursor-pointer transition-all hover:shadow-md m-2 ${
+        selectedAtendimento?.id === conversa.id
+          ? 'border-blue-500 bg-blue-50'
+          : 'border-gray-200 bg-white hover:border-gray-300'
+      }`}
+      onClick={() => onSelectAtendimento(conversa)}
+    >
+      {/* Header com nome do cliente e status */}
+      <div className="flex items-start justify-between mb-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center space-x-2 mb-1">
+            <User className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            <h3 className="font-medium text-gray-900 truncate">
+              {conversa.contatos?.nome || 'Cliente Desconhecido'}
+            </h3>
+          </div>
+          
+          {conversa.contatos?.telefone && (
+            <p className="text-sm text-gray-500 truncate">
+              {conversa.contatos.telefone}
+            </p>
+          )}
+        </div>
+        
+        <div className="flex flex-col items-end space-y-1">
+          <Badge className={getStatusColor(conversa.status)}>
+            {getStatusText(conversa.status)}
+          </Badge>
+          <div className="flex items-center text-xs text-gray-500">
+            <Clock className="w-3 h-3 mr-1" />
+            {formatarTempo(conversa.updated_at)}
+          </div>
+        </div>
+      </div>
+
+      {/* Informações adicionais */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          {conversa.canal && (
+            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+              {conversa.canal.toUpperCase()}
+            </span>
+          )}
+          
+          {conversa.prioridade && (
+            <Badge variant="outline" className={getPriorityColor(conversa.prioridade)}>
+              {conversa.prioridade.charAt(0).toUpperCase() + conversa.prioridade.slice(1)}
+            </Badge>
+          )}
+        </div>
+
+        {conversa.profiles && (
+          <div className="text-xs text-gray-500">
+            Agente: {conversa.profiles.nome}
+          </div>
+        )}
+      </div>
+
+      {/* Tags */}
+      {conversa.tags && conversa.tags.length > 0 && (
+        <div className="flex items-center mt-2 space-x-1">
+          <Tag className="w-3 h-3 text-gray-400" />
+          <div className="flex flex-wrap gap-1">
+            {conversa.tags.slice(0, 3).map((tag, index) => (
+              <span key={index} className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
+                {tag}
+              </span>
+            ))}
+            {conversa.tags.length > 3 && (
+              <span className="text-xs text-gray-500">+{conversa.tags.length - 3}</span>
             )}
           </div>
-        ))}
-      </div>
-    </ScrollArea>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div ref={containerRef} className="h-full">
+      <VirtualScroll
+        items={conversas}
+        itemHeight={120}
+        containerHeight={containerHeight}
+        renderItem={renderConversaItem}
+        className="h-full"
+        overscan={3}
+      />
+    </div>
   );
 }
