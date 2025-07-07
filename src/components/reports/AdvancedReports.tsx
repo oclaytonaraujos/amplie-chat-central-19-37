@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DatePickerWithRange } from '@/components/ui/date-range-picker';
+import { DateRange } from 'react-day-picker';
 import { 
   BarChart3, 
   Download, 
@@ -108,7 +109,7 @@ const mockData: ReportData = {
 
 export function AdvancedReports() {
   const [data, setData] = useState<ReportData>(mockData);
-  const [dateRange, setDateRange] = useState<any>(null);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [selectedChannel, setSelectedChannel] = useState('todos');
   const [reportType, setReportType] = useState('geral');
   const [loading, setLoading] = useState(false);
@@ -270,8 +271,9 @@ export function AdvancedReports() {
             <div>
               <Label>Período</Label>
               <DatePickerWithRange 
-                date={dateRange}
-                onDateChange={setDateRange}
+                value={dateRange}
+                onChange={setDateRange}
+                placeholder="Selecionar período"
               />
             </div>
             <div>
